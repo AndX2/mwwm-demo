@@ -1,4 +1,9 @@
+import 'dart:math';
+
 import 'package:mwwm_demo/domain/detail.dart';
+import 'package:mwwm_demo/domain/page_filter.dart';
+import 'package:mwwm_demo/service/data_src.dart';
+
 
 /// Сервис для демонстрационных данных
 class DemoService {
@@ -20,21 +25,7 @@ class DemoService {
       throw Exception(
           'Исключение спродуцировано установкой параметра DemoService.isProduceException');
     }
-    return DetailData(
-      'MWWM',
-      '''
-About 
-MVVM-inspired lightweight architectural framework for Flutter apps made with respect to Clean Architecture.
-
-Currently supported features 
-Complete separation of the application's codebase into independent layers: UI, presentation and business logic;
-Keeps widget tree clear: the main building block is just an extended version of StatefulWidget;
-Built-in mechanisms for handling asynchronous operations;
-The ability to easily implement the default error handling strategy;
-An event-like mechanism that helps keep the business logic well structured and testable.
-      ''',
-      'asset/image/gear_logo.png',
-    );
+    return detailDataSrc[0];
   }
 
   Future<bool?> fetchAccessToken(String login, String pass) async {
@@ -43,5 +34,23 @@ An event-like mechanism that helps keep the business logic well structured and t
       throw Exception(
           'Исключение спродуцировано установкой параметра DemoService.isProduceException');
     return true;
+  }
+
+  Future<List<DetailData>> fetchDetailDataList({PageFilter? pageFilter}) async {
+    await Future.delayed(Duration(seconds: 5));
+    if (_isNeedProduceException) {
+      throw Exception(
+          'Исключение спродуцировано установкой параметра DemoService.isProduceException');
+    }
+    if(pageFilter == null) pageFilter = PageFilter();
+    final rndDelegate = Random();
+    final result = List<DetailData>.generate(
+      pageFilter.limit,
+      (index) {
+        final rndSrcItem = detailDataSrc[rndDelegate.nextInt(detailDataSrc.length)];
+        return rndSrcItem.copyWith(title: '${rndSrcItem.title} # ${pageFilter!.offset + index}');
+      },
+    );
+    return result;
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class DetailData {
-  DetailData(
+  const DetailData(
     this.title,
     this.description,
     this.imgPath,
@@ -11,4 +11,16 @@ class DetailData {
   final String title;
   final String description;
   final String imgPath;
+
+  DetailData copyWith({
+    String? title,
+    String? description,
+    String? imgPath,
+  }) {
+    return DetailData(
+      title ?? this.title,
+      description ?? this.description,
+      imgPath ?? this.imgPath,
+    );
+  }
 }

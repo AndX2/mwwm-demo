@@ -1,15 +1,16 @@
-
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const headerMaxExtent = 272.0;
 const _headerMinExtent = kToolbarHeight;
 
 class ScrollHeaderDelegate extends SliverPersistentHeaderDelegate {
-  ScrollHeaderDelegate(this._topPadding);
+  ScrollHeaderDelegate(this._topPadding, this.onReload);
 
   final double _topPadding;
+  final Function()? onReload;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -22,14 +23,24 @@ class ScrollHeaderDelegate extends SliverPersistentHeaderDelegate {
           AppBar(
             leading: Container(),
             title: Text('Scroll screen'),
+            actions: onReload != null
+                ? [
+                    CupertinoButton(
+                      child: Icon(Icons.refresh, color: Colors.white),
+                      onPressed: onReload,
+                    )
+                  ]
+                : null,
           ),
-          Opacity(
-            opacity: Curves.easeOutCirc.transform(shrinkPart),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('asset/image/inno_back.jpeg'),
-                  fit: BoxFit.cover,
+          IgnorePointer(
+            child: Opacity(
+              opacity: Curves.easeOutCirc.transform(shrinkPart),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('asset/image/inno_back.jpeg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
